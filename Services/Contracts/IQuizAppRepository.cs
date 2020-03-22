@@ -4,11 +4,10 @@ using QuizApp.API.Models;
 
 namespace QuizApp.API.Services
 {
-    public interface IQuestionRepository
+    public interface IQuizAppRepository
     {
-        Task<IEnumerable<Question>> GetQuestionListAsync();
-        Task<Question> CreateQuestionsAsync (Question question);
-        Task<Question> GetQuestionAsync(int Id);
-        Task<bool> SaveAll();
+        Task<IEnumerable<Quiz>> GetQuizListAsync();
+        Task<Quiz> CreateQuizAsync (Quiz quiz);
+        Task<Quiz> GetQuizAsync(int quizId);
     }
 }
