@@ -36,9 +36,26 @@ namespace QuizApp.API.Migrations
                     b.Property<string>("QuestionContent")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("QuizId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.ToTable("Questions");
+                });
+
+            modelBuilder.Entity("QuizApp.API.Models.Quiz", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Quizzes");
                 });
 #pragma warning restore 612, 618
         }
