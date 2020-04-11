@@ -41,7 +41,7 @@ namespace QuizApp.API.Controllers
         [HttpGet("{quizId}")]
         public async Task<IActionResult> GetQuestionQuizId(int quizId)
         {
-            Question question = await _questionRepository.GetQuestionByQuizIdAsync(quizId);
+            IEnumerable<Question> question = await _questionRepository.GetQuestionByQuizIdAsync(quizId);
                 if (question == null)
                     return NotFound($"Quiz - {quizId} not found");
 

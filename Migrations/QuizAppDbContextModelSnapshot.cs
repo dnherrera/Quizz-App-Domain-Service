@@ -16,48 +16,51 @@ namespace QuizApp.API.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.2");
 
-            // modelBuilder.Entity("QuizApp.API.Models.Question", b =>
-            //     {
-            //         b.Property<int>("Id")
-            //             .ValueGeneratedOnAdd()
-            //             .HasColumnType("INTEGER");
+            modelBuilder.Entity("QuizApp.API.Models.Question", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            //         b.Property<string>("Answer1")
-            //             .HasColumnType("TEXT");
+                    b.Property<string>("Answer1")
+                        .HasColumnType("TEXT");
 
-            //         b.Property<string>("Answer2")
-            //             .HasColumnType("TEXT");
+                    b.Property<string>("Answer2")
+                        .HasColumnType("TEXT");
 
-            //         b.Property<string>("Answer3")
-            //             .HasColumnType("TEXT");
+                    b.Property<string>("Answer3")
+                        .HasColumnType("TEXT");
 
-            //         b.Property<string>("CorrectAnswer")
-            //             .HasColumnType("TEXT");
+                    b.Property<string>("CorrectAnswer")
+                        .HasColumnType("TEXT");
 
-            //         b.Property<string>("QuestionContent")
-            //             .HasColumnType("TEXT");
+                    b.Property<string>("QuestionContent")
+                        .HasColumnType("TEXT");
 
-            //         b.Property<int>("QuizId")
-            //             .HasColumnType("INTEGER");
+                    b.Property<int>("QuizId")
+                        .HasColumnType("INTEGER");
 
-            //         b.HasKey("Id");
+                    b.HasKey("Id");
 
-            //         b.ToTable("Questions");
-            //     });
+                    b.ToTable("Questions");
+                });
 
-            // modelBuilder.Entity("QuizApp.API.Models.Quiz", b =>
-            //     {
-            //         b.Property<int>("Id")
-            //             .ValueGeneratedOnAdd()
-            //             .HasColumnType("INTEGER");
+            modelBuilder.Entity("QuizApp.API.Models.Quiz", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-            //         b.Property<string>("Title")
-            //             .HasColumnType("TEXT");
+                    b.Property<string>("OwnerId")
+                        .HasColumnType("TEXT");
 
-            //         b.HasKey("Id");
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
 
-            //         b.ToTable("Quizzes");
-            //     });
+                    b.HasKey("Id");
+
+                    b.ToTable("Quizzes");
+                });
 
             modelBuilder.Entity("QuizApp.API.Models.Users", b =>
                 {

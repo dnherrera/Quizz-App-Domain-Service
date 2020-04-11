@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuizApp.API.Models;
 using QuizApp.API.Services;
@@ -21,11 +23,20 @@ namespace QuizApp.API.Controllers
             _questionRepository = questionRepository;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetQuizzesList()
         {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            IEnumerable<Quiz> quizzes = (await _quizAppRepository.GetQuizListAsync()).Where(q => q.OwnerId == userId);
+            return Ok(quizzes);
+        }
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllQuizzes()
+        {
             IEnumerable<Quiz> quizzes = await _quizAppRepository.GetQuizListAsync();
-                return Ok(quizzes);
+            return Ok(quizzes);
         }
 
         [HttpGet("{QuizId}")]
@@ -38,11 +49,21 @@ namespace QuizApp.API.Controllers
                 return Ok(quiz);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> PostQuiz([FromBody] Quiz quiz) 
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            string currentUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            quiz.OwnerId = currentUserId;
            await _quizAppRepository.CreateQuizAsync(quiz);
-           return Accepted(quiz);
+
+            return Accepted(quiz);
         }
 
         [HttpPut("{QuizId}")]
