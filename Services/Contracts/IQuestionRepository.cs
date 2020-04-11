@@ -9,7 +9,7 @@ namespace QuizApp.API.Services
         Task<IEnumerable<Question>> GetQuestionListAsync();
         Task<Question> CreateQuestionsAsync (Question question);
         Task<Question> GetQuestionAsync(int Id);
-        Task<Question> GetQuestionByQuizIdAsync(int quizId);
+        Task<IEnumerable<Question>> GetQuestionByQuizIdAsync(int quizId);
         Task<bool> SaveAll();
     }
 }
