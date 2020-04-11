@@ -13,10 +13,12 @@ namespace QuizApp.API.Controllers
     public class QuestionsController : ControllerBase
     {
         private readonly IQuestionRepository _questionRepository;
+        private readonly IQuizAppRepository _quizAppRepository;
 
-        public QuestionsController(IQuestionRepository questionRepository)
+        public QuestionsController(IQuestionRepository questionRepository, IQuizAppRepository quizAppRepository)
         {
             _questionRepository = questionRepository;
+            _quizAppRepository = quizAppRepository;
         }
 
         [HttpGet]
@@ -26,12 +28,22 @@ namespace QuizApp.API.Controllers
                 return Ok(questions);
         }
 
-        [HttpGet("{QuestionId}")]
-        public async Task<IActionResult> GetQuestion(int QuestionId)
+        [HttpGet("question/{questionId}")]
+        public async Task<IActionResult> GetQuestion(int questionId)
         {
-            Question question = await _questionRepository.GetQuestionAsync(QuestionId);
+            Question question = await _questionRepository.GetQuestionAsync(questionId);
                 if (question == null)
-                    return NotFound($"Question {QuestionId} not found");
+                    return NotFound($"Question {questionId} not found");
+
+                return Ok(question);
+        }
+
+        [HttpGet("{quizId}")]
+        public async Task<IActionResult> GetQuestionQuizId(int quizId)
+        {
+            IEnumerable<Question> question = await _questionRepository.GetQuestionByQuizIdAsync(quizId);
+                if (question == null)
+                    return NotFound($"Quiz - {quizId} not found");
 
                 return Ok(question);
         }
@@ -39,6 +51,10 @@ namespace QuizApp.API.Controllers
         [HttpPost]
         public async Task<IActionResult> PostQuestion([FromBody] Question question) 
         {
+           Quiz quiz = await _quizAppRepository.GetQuizAsync(question.QuizId);
+           if(quiz == null)
+                return NotFound($"QuizId {question.QuizId} not found");
+
            await _questionRepository.CreateQuestionsAsync(question);
            return Accepted(question);
         }
@@ -49,7 +65,13 @@ namespace QuizApp.API.Controllers
             try
             {
                 Question questionToUpdate = await _questionRepository.GetQuestionAsync(QuestionId);
-                questionToUpdate.QuestionContent = question.QuestionContent;
+                questionToUpdate.QuestionContent = question.QuestionContent == null ? questionToUpdate.QuestionContent : question.QuestionContent;
+                questionToUpdate.CorrectAnswer = question.CorrectAnswer == null ? questionToUpdate.CorrectAnswer : question.CorrectAnswer;
+                questionToUpdate.Answer1 = question.Answer1 == null ? questionToUpdate.Answer1 : question.Answer1;
+                questionToUpdate.Answer2 = question.Answer2 == null ? questionToUpdate.Answer2 : question.Answer2;
+                questionToUpdate.Answer3 = question.Answer3 == null ? questionToUpdate.Answer3 : question.Answer3;
+                questionToUpdate.QuizId = question.QuizId;
+
                 if (!await _questionRepository.SaveAll())
                     throw new Exception($"Updating qeustion {QuestionId} failed on save");
 

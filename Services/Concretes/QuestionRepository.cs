@@ -28,6 +28,11 @@ namespace QuizApp.API.Services
             return await _quizAppDbContext.Questions .Where(c => c.Id == Id).FirstOrDefaultAsync();
         }
 
+        public async Task<IEnumerable<Question>> GetQuestionByQuizIdAsync(int quizId)
+        {
+            return await _quizAppDbContext.Questions .Where(c => c.QuizId == quizId).ToListAsync();
+        }
+
         public async Task<IEnumerable<Question>> GetQuestionListAsync()
         {
              return await _quizAppDbContext.Questions.ToListAsync();
