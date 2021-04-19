@@ -5,8 +5,8 @@ namespace QuizApp.API.Services
 {
     public interface IAuthRepository
     {
-        Task<Users> RegisterAsync (Users user, string password);
-        Task<Users> LoginAsync (string username, string password);
+        Task<UserModel> RegisterAsync (UserModel user, string password);
+        Task<UserModel> LoginAsync (string username, string password);
         Task<bool> UserExistsAsync (string username);
     }
 }

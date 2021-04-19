@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using QuizApp.API.Models;
@@ -24,14 +23,14 @@ namespace QuizApp.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetQuestionList()
         {
-            IEnumerable<Question> questions = await _questionRepository.GetQuestionListAsync();
+            IEnumerable<QuestionModel> questions = await _questionRepository.GetQuestionListAsync();
                 return Ok(questions);
         }
 
         [HttpGet("question/{questionId}")]
         public async Task<IActionResult> GetQuestion(int questionId)
         {
-            Question question = await _questionRepository.GetQuestionAsync(questionId);
+            QuestionModel question = await _questionRepository.GetQuestionAsync(questionId);
                 if (question == null)
                     return NotFound($"Question {questionId} not found");
 
@@ -41,7 +40,7 @@ namespace QuizApp.API.Controllers
         [HttpGet("{quizId}")]
         public async Task<IActionResult> GetQuestionQuizId(int quizId)
         {
-            IEnumerable<Question> question = await _questionRepository.GetQuestionByQuizIdAsync(quizId);
+            IEnumerable<QuestionModel> question = await _questionRepository.GetQuestionByQuizIdAsync(quizId);
                 if (question == null)
                     return NotFound($"Quiz - {quizId} not found");
 
@@ -49,9 +48,9 @@ namespace QuizApp.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostQuestion([FromBody] Question question) 
+        public async Task<IActionResult> PostQuestion([FromBody] QuestionModel question) 
         {
-           Quiz quiz = await _quizAppRepository.GetQuizAsync(question.QuizId);
+           QuizModel quiz = await _quizAppRepository.GetQuizAsync(question.QuizId);
            if(quiz == null)
                 return NotFound($"QuizId {question.QuizId} not found");
 
@@ -60,11 +59,11 @@ namespace QuizApp.API.Controllers
         }
 
         [HttpPut("{QuestionId}")]
-        public async Task<IActionResult> UpdateQuestion([FromRoute] int QuestionId, [FromBody] Question question)
+        public async Task<IActionResult> UpdateQuestion([FromRoute] int QuestionId, [FromBody] QuestionModel question)
         {
             try
             {
-                Question questionToUpdate = await _questionRepository.GetQuestionAsync(QuestionId);
+                QuestionModel questionToUpdate = await _questionRepository.GetQuestionAsync(QuestionId);
                 questionToUpdate.QuestionContent = question.QuestionContent == null ? questionToUpdate.QuestionContent : question.QuestionContent;
                 questionToUpdate.CorrectAnswer = question.CorrectAnswer == null ? questionToUpdate.CorrectAnswer : question.CorrectAnswer;
                 questionToUpdate.Answer1 = question.Answer1 == null ? questionToUpdate.Answer1 : question.Answer1;

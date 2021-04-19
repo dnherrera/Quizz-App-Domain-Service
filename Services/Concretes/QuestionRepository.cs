@@ -16,24 +16,24 @@ namespace QuizApp.API.Services
         {
             _quizAppDbContext = quizAppDbContext;
         }
-        public async Task<Question> CreateQuestionsAsync(Question question)
+        public async Task<QuestionModel> CreateQuestionsAsync(QuestionModel question)
         {
             await _quizAppDbContext.Questions.AddAsync(question);
             await _quizAppDbContext.SaveChangesAsync();
             return question;
         }
 
-        public async Task<Question> GetQuestionAsync(int Id)
+        public async Task<QuestionModel> GetQuestionAsync(int Id)
         {
             return await _quizAppDbContext.Questions .Where(c => c.Id == Id).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Question>> GetQuestionByQuizIdAsync(int quizId)
+        public async Task<IEnumerable<QuestionModel>> GetQuestionByQuizIdAsync(int quizId)
         {
             return await _quizAppDbContext.Questions .Where(c => c.QuizId == quizId).ToListAsync();
         }
 
-        public async Task<IEnumerable<Question>> GetQuestionListAsync()
+        public async Task<IEnumerable<QuestionModel>> GetQuestionListAsync()
         {
              return await _quizAppDbContext.Questions.ToListAsync();
         }

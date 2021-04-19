@@ -6,10 +6,10 @@ namespace QuizApp.API.Services
 {
     public interface IQuestionRepository
     {
-        Task<IEnumerable<Question>> GetQuestionListAsync();
-        Task<Question> CreateQuestionsAsync (Question question);
-        Task<Question> GetQuestionAsync(int Id);
-        Task<IEnumerable<Question>> GetQuestionByQuizIdAsync(int quizId);
+        Task<IEnumerable<QuestionModel>> GetQuestionListAsync();
+        Task<QuestionModel> CreateQuestionsAsync (QuestionModel question);
+        Task<QuestionModel> GetQuestionAsync(int Id);
+        Task<IEnumerable<QuestionModel>> GetQuestionByQuizIdAsync(int quizId);
         Task<bool> SaveAll();
     }
 }
