@@ -38,19 +38,19 @@ namespace QuizApp.API.Controllers
             if (!ModelState.IsValid)
                  return BadRequest(ModelState);
                 
-            UsersModel userToCreate = new UsersModel 
+            UserModel userToCreate = new UserModel 
             {
                 Username = userFoRegister.username
             };
 
-            UsersModel createUser = await _authRepository.RegisterAsync(userToCreate, userFoRegister.password);
+            UserModel createUser = await _authRepository.RegisterAsync(userToCreate, userFoRegister.password);
             return StatusCode(201);
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login ([FromBody] UserForLoginDto userForLogin)
         {
-            UsersModel userFromRepo = await _authRepository.LoginAsync(userForLogin.Username, userForLogin.Password);
+            UserModel userFromRepo = await _authRepository.LoginAsync(userForLogin.Username, userForLogin.Password);
 
             if (userFromRepo?.Id == null)
                 return Unauthorized();

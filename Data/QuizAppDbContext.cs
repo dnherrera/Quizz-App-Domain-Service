@@ -28,6 +28,6 @@ namespace QuizApp.API.Data
         /// <summary>
         /// User Model
         /// </summary>
-        public DbSet<UsersModel> Users {get;set;}
+        public DbSet<UserModel> Users {get;set;}
     }
 }

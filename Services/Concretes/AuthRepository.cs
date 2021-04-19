@@ -14,9 +14,9 @@ namespace QuizApp.API.Services
             _quizAppDbContext = quizAppDbContext;
         }
 
-        public async Task<UsersModel> LoginAsync(string username, string password)
+        public async Task<UserModel> LoginAsync(string username, string password)
         {
-            UsersModel user = await _quizAppDbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+            UserModel user = await _quizAppDbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
 
             if (user == null)
                 return null;
@@ -41,7 +41,7 @@ namespace QuizApp.API.Services
             }
         }
 
-        public async Task<UsersModel> RegisterAsync(UsersModel user, string password)
+        public async Task<UserModel> RegisterAsync(UserModel user, string password)
         {
              byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
