@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace QuizApp.API.Models
 {
-    public class Quiz
+    public class QuizModel
     {
         [Key]
         public int Id { get; set; }

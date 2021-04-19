@@ -6,8 +6,8 @@ namespace QuizApp.API.Services
 {
     public interface IQuizAppRepository
     {
-        Task<IEnumerable<Quiz>> GetQuizListAsync();
-        Task<Quiz> CreateQuizAsync (Quiz quiz);
-        Task<Quiz> GetQuizAsync(int quizId);
+        Task<IEnumerable<QuizModel>> GetQuizListAsync();
+        Task<QuizModel> CreateQuizAsync (QuizModel quiz);
+        Task<QuizModel> GetQuizAsync(int quizId);
     }
 }

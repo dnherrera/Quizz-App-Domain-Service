@@ -1,17 +1,14 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using QuizApp.API.Dtos;
 using QuizApp.API.Models;
 using QuizApp.API.Services;
-using QuizApp.API.Dtos;
 
 namespace QuizApp.API.Controllers
 {
@@ -41,19 +38,19 @@ namespace QuizApp.API.Controllers
             if (!ModelState.IsValid)
                  return BadRequest(ModelState);
                 
-            Users userToCreate = new Users 
+            UsersModel userToCreate = new UsersModel 
             {
                 Username = userFoRegister.username
             };
 
-            Users createUser = await _authRepository.RegisterAsync(userToCreate, userFoRegister.password);
+            UsersModel createUser = await _authRepository.RegisterAsync(userToCreate, userFoRegister.password);
             return StatusCode(201);
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login ([FromBody] UserForLoginDto userForLogin)
         {
-            Users userFromRepo = await _authRepository.LoginAsync(userForLogin.Username, userForLogin.Password);
+            UsersModel userFromRepo = await _authRepository.LoginAsync(userForLogin.Username, userForLogin.Password);
 
             if (userFromRepo?.Id == null)
                 return Unauthorized();

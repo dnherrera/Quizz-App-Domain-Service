@@ -28,21 +28,21 @@ namespace QuizApp.API.Controllers
         public async Task<IActionResult> GetQuizzesList()
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            IEnumerable<Quiz> quizzes = (await _quizAppRepository.GetQuizListAsync()).Where(q => q.OwnerId == userId);
+            IEnumerable<QuizModel> quizzes = (await _quizAppRepository.GetQuizListAsync()).Where(q => q.OwnerId == userId);
             return Ok(quizzes);
         }
 
         [HttpGet("all")]
         public async Task<IActionResult> GetAllQuizzes()
         {
-            IEnumerable<Quiz> quizzes = await _quizAppRepository.GetQuizListAsync();
+            IEnumerable<QuizModel> quizzes = await _quizAppRepository.GetQuizListAsync();
             return Ok(quizzes);
         }
 
         [HttpGet("{QuizId}")]
         public async Task<IActionResult> GetQuiz(int QuizId)
         {
-            Quiz quiz = await _quizAppRepository.GetQuizAsync(QuizId);
+            QuizModel quiz = await _quizAppRepository.GetQuizAsync(QuizId);
                 if (quiz == null)
                     return NotFound($"Quiz {QuizId} not found");
 
@@ -51,7 +51,7 @@ namespace QuizApp.API.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> PostQuiz([FromBody] Quiz quiz) 
+        public async Task<IActionResult> PostQuiz([FromBody] QuizModel quiz) 
         {
             if (!ModelState.IsValid)
             {
@@ -67,11 +67,11 @@ namespace QuizApp.API.Controllers
         }
 
         [HttpPut("{QuizId}")]
-        public async Task<IActionResult> UpdateQuestion([FromRoute] int QuizId, [FromBody] Quiz quiz)
+        public async Task<IActionResult> UpdateQuestion([FromRoute] int QuizId, [FromBody] QuizModel quiz)
         {
             try
             {
-                Quiz quizToUpdate = await _quizAppRepository.GetQuizAsync(QuizId);
+                QuizModel quizToUpdate = await _quizAppRepository.GetQuizAsync(QuizId);
                 quizToUpdate.Title = quiz.Title;
                 if (!await _questionRepository.SaveAll())
                     throw new Exception($"Updating quiz {QuizId} failed on save");
