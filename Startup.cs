@@ -12,17 +12,31 @@ using QuizApp.API.Services;
 
 namespace QuizApp.API
 {
+    /// <summary>
+    /// The Start up.
+    /// </summary>
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+        /// <summary>
+        /// Gets the Configuration
+        /// </summary>
+        public IConfiguration Configuration { get; }
+
+        /// <summary>
+        /// Intializes a new instance of <seealso cref="Startup"/>
+        /// </summary>
+        /// <param name="configuration"></param>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// Config the service.
+        /// </summary>
+        /// <param name="services">The service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
@@ -57,7 +71,11 @@ namespace QuizApp.API
             services.AddTransient<IAuthRepository, AuthRepository>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// Config an application.
+        /// </summary>
+        /// <param name="app">The application builder.</param>
+        /// <param name="env">The webhost environment.</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
