@@ -7,6 +7,9 @@ using QuizApp.API.Services;
 
 namespace QuizApp.API.Controllers
 {
+    /// <summary>
+    /// Question Controller
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class QuestionsController : ControllerBase
@@ -14,39 +17,65 @@ namespace QuizApp.API.Controllers
         private readonly IQuestionRepository _questionRepository;
         private readonly IQuizAppRepository _quizAppRepository;
 
+        /// <summary>
+        /// Intializes a new instance of <seealso cref="QuestionsController"/>
+        /// </summary>
+        /// <param name="questionRepository"></param>
+        /// <param name="quizAppRepository"></param>
         public QuestionsController(IQuestionRepository questionRepository, IQuizAppRepository quizAppRepository)
         {
             _questionRepository = questionRepository;
             _quizAppRepository = quizAppRepository;
         }
 
+        /// <summary>
+        /// Get Question List
+        /// </summary>
+        /// <returns>IEnumerable Question List. </returns>
         [HttpGet]
         public async Task<IActionResult> GetQuestionList()
         {
             IEnumerable<QuestionModel> questions = await _questionRepository.GetQuestionListAsync();
-                return Ok(questions);
+            return Ok(questions);
         }
 
+        /// <summary>
+        /// Get Question By Id
+        /// </summary>
+        /// <param name="questionId"></param>
+        /// <returns></returns>
         [HttpGet("question/{questionId}")]
-        public async Task<IActionResult> GetQuestion(int questionId)
+        public async Task<IActionResult> GetQuestionById(int questionId)
         {
-            QuestionModel question = await _questionRepository.GetQuestionAsync(questionId);
-                if (question == null)
-                    return NotFound($"Question {questionId} not found");
-
-                return Ok(question);
+            QuestionModel question = await _questionRepository.GetQuestionByIdAsync(questionId);
+                
+            if (question == null)
+                    return NotFound($"Question '{questionId}' not found");
+                
+            return Ok(question);
         }
 
+        /// <summary>
+        /// Get Question By Quiz Identifier
+        /// </summary>
+        /// <param name="quizId"></param>
+        /// <returns></returns>
         [HttpGet("{quizId}")]
         public async Task<IActionResult> GetQuestionQuizId(int quizId)
         {
             IEnumerable<QuestionModel> question = await _questionRepository.GetQuestionByQuizIdAsync(quizId);
-                if (question == null)
-                    return NotFound($"Quiz - {quizId} not found");
-
-                return Ok(question);
+               
+            if (question == null)
+                 return NotFound($"Quiz '{quizId}' not found");
+                
+            return Ok(question);
         }
 
+        /// <summary>
+        /// Post a Question
+        /// </summary>
+        /// <param name="question"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> PostQuestion([FromBody] QuestionModel question) 
         {
@@ -55,28 +84,37 @@ namespace QuizApp.API.Controllers
                 return NotFound($"QuizId {question.QuizId} not found");
 
            await _questionRepository.CreateQuestionsAsync(question);
-           return Accepted(question);
+           
+            return Accepted(question);
         }
 
-        [HttpPut("{QuestionId}")]
-        public async Task<IActionResult> UpdateQuestion([FromRoute] int QuestionId, [FromBody] QuestionModel question)
+        /// <summary>
+        /// Edit a Question
+        /// </summary>
+        /// <param name="questionId"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPut("{questionId}")]
+        public async Task<IActionResult> UpdateQuestion([FromRoute] int questionId, [FromBody] QuestionModel request)
         {
             try
             {
-                QuestionModel questionToUpdate = await _questionRepository.GetQuestionAsync(QuestionId);
-                questionToUpdate.QuestionContent = question.QuestionContent == null ? questionToUpdate.QuestionContent : question.QuestionContent;
-                questionToUpdate.CorrectAnswer = question.CorrectAnswer == null ? questionToUpdate.CorrectAnswer : question.CorrectAnswer;
-                questionToUpdate.Answer1 = question.Answer1 == null ? questionToUpdate.Answer1 : question.Answer1;
-                questionToUpdate.Answer2 = question.Answer2 == null ? questionToUpdate.Answer2 : question.Answer2;
-                questionToUpdate.Answer3 = question.Answer3 == null ? questionToUpdate.Answer3 : question.Answer3;
-                questionToUpdate.QuizId = question.QuizId;
+                var questionToUpdate = await _questionRepository.GetQuestionByIdAsync(questionId);
+
+                // Coalescing Operator - binary operator to check for null values.
+                questionToUpdate.QuestionContent = request.QuestionContent ?? questionToUpdate.QuestionContent;
+                questionToUpdate.CorrectAnswer = request.CorrectAnswer ?? questionToUpdate.CorrectAnswer;
+                questionToUpdate.Answer1 = request.Answer1  ?? questionToUpdate.Answer1;
+                questionToUpdate.Answer2 = request.Answer2 ?? questionToUpdate.Answer2;
+                questionToUpdate.Answer3 = request.Answer3 ?? questionToUpdate.Answer3;
+                questionToUpdate.QuizId = request.QuizId;
 
                 if (!await _questionRepository.SaveAll())
-                    throw new Exception($"Updating qeustion {QuestionId} failed on save");
+                    throw new Exception($"Updating question '{questionId}' failed on save.");
 
                 return Accepted(questionToUpdate);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex);
             }
